@@ -1,4 +1,6 @@
 import React from "react";
+import NavLinks from "./NavLinks";
+import UserLinks from "./UserLinks";
 
 const NavBar = () => {
   return (
@@ -6,8 +8,12 @@ const NavBar = () => {
       <div>
         <span>App Name</span>
       </div>
-      <div>NavLinks</div>
-      <div>UserLinks</div>
+      <div>
+        <NavLinks />
+      </div>
+      <div>
+        <UserLinks />
+      </div>
     </div>
   );
 };
