@@ -1,5 +1,11 @@
+import NavBar from "./components/Navbar/NavBar";
+
 function App() {
-  return <div>Firebase React</div>;
+  return (
+    <div>
+      <NavBar />
+    </div>
+  );
 }
 
 export default App;

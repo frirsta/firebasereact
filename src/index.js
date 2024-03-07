@@ -7,6 +7,7 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import SignIn from "./pages/Auth/SignIn";
 import Register from "./pages/Auth/Register";
 import Reset from "./pages/Auth/Reset";
+import Context from "./components/Context/Context";
 
 const router = createBrowserRouter([
   { path: "/", element: <App /> },
@@ -17,8 +18,11 @@ const router = createBrowserRouter([
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <RouterProvider router={router}></RouterProvider>
-    <App />
+    <Context>
+      <RouterProvider router={router}>
+        <App />
+      </RouterProvider>
+    </Context>
   </React.StrictMode>
 );
 
