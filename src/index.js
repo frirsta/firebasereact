@@ -5,14 +5,14 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import SignIn from "./pages/Auth/SignIn";
-import Register from "./pages/Auth/Register";
+import SignUp from "./pages/Auth/SignUp";
 import Reset from "./pages/Auth/Reset";
 import Context from "./components/Context/Context";
 
 const router = createBrowserRouter([
   { path: "/", element: <App /> },
   { path: "/signin", element: <SignIn /> },
-  { path: "/register", element: <Register /> },
+  { path: "/signup", element: <SignUp /> },
   { path: "/reset", element: <Reset /> },
 ]);
 const root = ReactDOM.createRoot(document.getElementById("root"));
