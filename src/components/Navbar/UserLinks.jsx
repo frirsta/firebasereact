@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Tooltip } from "@material-tailwind/react";
 import { Avatar } from "@material-tailwind/react";
 import avatar from "../../assets/images/avatar.jpg";
+import { AuthContext } from "../Context/Context";
 const UserLinks = () => {
+  const { signOutUser, user, userData } = useContext(AuthContext);
   return (
     <div className="flex justify-center items-center cursor-pointer">
       <div className="hover:translate-y-1 duration-500 ease-in-out hover:text-blue-gray-500">
@@ -58,12 +60,15 @@ const UserLinks = () => {
           />
         </svg>
       </div>
-      <div className="mx-4 flex items-center">
+      <div className="mx-4 flex items-center" onClick={signOutUser}>
         <Tooltip placement="bottom" content="Sign out">
-          <Avatar src={avatar} size="sm" alt="avatar" />
+          <Avatar src={user?.photoURL || avatar} size="sm" alt="avatar" />
         </Tooltip>
         <p className="ml-4 font-sans text-sm text-black font-medium no-underline">
-          User
+          {user?.displayName == null && userData?.name !== undefined
+            ? userData?.name?.charAt(0)?.toUpperCase() +
+              userData?.name?.slice(1)
+            : user?.displayName?.split(" ")[0]}
         </p>
       </div>
     </div>

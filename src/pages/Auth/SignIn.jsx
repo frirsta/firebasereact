@@ -16,8 +16,13 @@ const SignIn = () => {
   useEffect(() => {
     setLoading(true);
     onAuthStateChanged(auth, (user) => {
-      navigate("/");
-      setLoading(false);
+      if (user) {
+        navigate("/");
+        setLoading(false);
+      } else {
+        navigate("/signin");
+        setLoading(false);
+      }
     });
   }, [navigate]);
 

@@ -16,7 +16,7 @@ import {
   addDoc,
   onSnapshot,
 } from "firebase/firestore";
-import { useNavigate } from "react-router-dom";
+import { redirect } from "react-router-dom";
 
 export const AuthContext = createContext();
 
@@ -25,7 +25,6 @@ const Context = ({ children }) => {
   const provider = new GoogleAuthProvider();
   const [user, setUser] = useState();
   const [userData, setUserData] = useState();
-  const navigate = useNavigate();
 
   const signInWithGoogle = async () => {
     try {
@@ -96,13 +95,12 @@ const Context = ({ children }) => {
           setUserData(doc?.docs[0]?.data());
         });
         setUser(user);
-        navigate("/");
       } else {
         setUser(null);
-        navigate("/signin");
+        redirect("/signin");
       }
     });
-  }, [collectionUserRef, navigate]);
+  }, [collectionUserRef]);
 
   useEffect(() => {
     userStateChange();
