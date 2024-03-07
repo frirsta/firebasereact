@@ -52,7 +52,7 @@ const SignIn = () => {
           loading
         </div>
       ) : (
-        <div>
+        <div className="grid grid-cols-1 justify-items-center items-center h-screen">
           <Card color="transparent" shadow={false}>
             <Typography variant="h4" color="blue-gray">
               Sign In
