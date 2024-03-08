@@ -8,9 +8,10 @@ import SignIn from "./pages/Auth/SignIn";
 import SignUp from "./pages/Auth/SignUp";
 import Reset from "./pages/Auth/Reset";
 import Context from "./components/Context/Context";
+import NotFound from "./components/error/NotFound";
 
 const router = createBrowserRouter([
-  { path: "/", element: <App /> },
+  { root: true, path: "/", errorElement: <NotFound />, element: <App /> },
   { path: "/signin", element: <SignIn /> },
   { path: "/signup", element: <SignUp /> },
   { path: "/reset", element: <Reset /> },

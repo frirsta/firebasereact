@@ -70,6 +70,7 @@ const Context = ({ children }) => {
     } catch (error) {
       alert(error.message);
       console.log(error.message);
+      console.log(error);
     }
   };
 
