@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Tooltip } from "@material-tailwind/react";
+import { Button, Tooltip } from "@material-tailwind/react";
 import { Avatar } from "@material-tailwind/react";
 import avatar from "../../assets/images/avatar.jpg";
 import { AuthContext } from "../Context/Context";
@@ -60,7 +60,7 @@ const UserLinks = () => {
           />
         </svg>
       </div>
-      <div className="mx-4 flex items-center" onClick={signOutUser}>
+      <div className="mx-4 flex items-center">
         <Tooltip placement="bottom" content="Sign out">
           <Avatar src={user?.photoURL || avatar} size="sm" alt="avatar" />
         </Tooltip>
@@ -71,6 +71,7 @@ const UserLinks = () => {
             : user?.displayName?.split(" ")[0]}
         </p>
       </div>
+      <Button onClick={signOutUser}>Sign out</Button>
     </div>
   );
 };
