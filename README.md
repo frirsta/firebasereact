@@ -46,3 +46,6 @@
 
 - Instagram
   Photo by [Alexander Shatov](https://unsplash.com/@alexbemore?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash) on [Unsplash](https://unsplash.com/photos/blue-and-red-square-logo-71Qk8ODIBko?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash)
+
+- google
+<a href="https://www.freepik.com/icon/google_300221#fromView=search&page=1&position=0&uuid=1705c7a7-b991-417d-8a5a-37cc95f9572a">Icon by Freepik</a>

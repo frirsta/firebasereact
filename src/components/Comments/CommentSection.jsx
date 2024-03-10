@@ -9,10 +9,11 @@ import {
   serverTimestamp,
   setDoc,
 } from "firebase/firestore";
-import { Avatar, Button, avatar } from "@material-tailwind/react";
+import { Button } from "@material-tailwind/react";
 import Comment from "./Comment";
 import { db } from "../../firebase/firebase";
 import { postActions, Reducer, postState } from "../Context/Reducer";
+import UserAvatar from "../ProfileCard/UserAvatar";
 
 const CommentSection = ({ postId }) => {
   const comment = useRef("");
@@ -69,7 +70,7 @@ const CommentSection = ({ postId }) => {
     <div>
       <div>
         <div>
-          <Avatar src={user?.photoURL || avatar}></Avatar>
+          <UserAvatar image={user?.photoURL} name={user?.name}></UserAvatar>
         </div>
         <form onSubmit={addComment}>
           <input

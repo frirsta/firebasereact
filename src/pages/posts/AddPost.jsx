@@ -42,7 +42,7 @@ const AddPost = () => {
   const postsCollection = collection(db, "posts");
   const document = postRef.id;
   const [state, dispatch] = useReducer(Reducer, postState);
-  const { ADD_POST, HANDLE_ERROR } = postActions;
+  const { SUBMIT_POST, HANDLE_ERROR } = postActions;
   const [progressBar, setProgressBar] = useState(0);
   const [posts, setPosts] = useState([]);
 
@@ -149,10 +149,10 @@ const AddPost = () => {
     };
     fetchPosts();
     const postData = async () => {
-      const q = query(collectionRef, orderBy("timestamp", "desc"));
+      const q = query(collectionRef, orderBy("timestamp", "asc"));
       await onSnapshot(q, (doc) => {
         dispatch({
-          type: ADD_POST,
+          type: SUBMIT_POST,
           posts: doc?.docs?.map((item) => item?.data()),
         });
         scrollRef?.current?.scrollIntoView({ behavior: "smooth" });
@@ -162,7 +162,7 @@ const AddPost = () => {
       });
     };
     return () => postData();
-  }, [ADD_POST]);
+  }, [SUBMIT_POST]);
 
   return (
     <div className="flex flex-col items-center">

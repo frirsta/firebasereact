@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useReducer } from "react";
+import React, { useContext, useEffect, useReducer, useState } from "react";
 import { AuthContext } from "../../components/Context/Context";
 import {
   Reducer,
@@ -26,7 +26,7 @@ import {
   CardHeader,
 } from "@material-tailwind/react";
 import CommentSection from "../../components/Comments/CommentSection";
-
+import UserAvatar from "../../components/ProfileCard/UserAvatar";
 const PostDetails = ({
   email,
   id,
@@ -42,7 +42,12 @@ const PostDetails = ({
   const likesCollection = collection(db, "posts", id, "likes");
   const postDocument = doc(db, "posts", id);
   const { ADD_LIKE, HANDLE_ERROR } = postActions;
+  const [open, setOpen] = useState(false);
 
+  const handleOpen = (e) => {
+    e.preventDefault();
+    setOpen(!open);
+  };
   const addUser = async () => {
     try {
       const userQuery = query(
@@ -131,10 +136,11 @@ const PostDetails = ({
         <CardHeader
           floated={false}
           shadow={false}
-          color="transparent"
+          color="lightBlue"
           className="m-0 rounded-none"
         >
-          <img alt={text} src={image} />
+          {image && <img className="h-[500px]" alt={text} src={image} />}
+          <UserAvatar src={logo} alt="avatar" size="sm" />
           <h1>{name}</h1>
         </CardHeader>
         <CardBody>
@@ -143,11 +149,17 @@ const PostDetails = ({
         <CardFooter className="flex items-center justify-between">
           <Button onClick={handleLike}>Like</Button>{" "}
           {state.likes?.length > 0 && state?.likes?.length}
-          <Button onClick={addUser}>Add</Button>
+          {user?.uid !== uid && <Button onClick={addUser}>Add</Button>}
           <Button onClick={deletePost}>Delete</Button>
         </CardFooter>
       </Card>
-      <CommentSection postId={id} />
+      <div
+        className="flex items-center cursor-pointer rounded-lg p-2 hover:bg-gray-100"
+        onClick={handleOpen}
+      >
+        Comments
+      </div>
+      {open && <CommentSection postId={id} />}
     </div>
   );
 };

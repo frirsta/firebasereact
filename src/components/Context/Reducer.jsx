@@ -1,5 +1,5 @@
 export const postActions = {
-  ADD_POST: "ADD_POST",
+  SUBMIT_POST: "SUBMIT_POST",
   HANDLE_ERROR: "HANDLE_ERROR",
   ADD_LIKE: "ADD_LIKE",
   ADD_COMMENT: "ADD_COMMENT",
