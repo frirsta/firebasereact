@@ -14,7 +14,7 @@ export const postState = {
 
 export const Reducer = (state, action) => {
   switch (action.type) {
-    case postActions.ADD_POST:
+    case postActions.SUBMIT_POST:
       return {
         ...state,
         error: false,

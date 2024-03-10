@@ -1,47 +1,22 @@
-import React, { useContext, useEffect, useReducer, useState } from "react";
+import React, { useContext, useState } from "react";
 import { AuthContext } from "../../components/Context/Context";
-import {
-  Reducer,
-  postActions,
-  postState,
-} from "../../components/Context/Reducer";
 import {
   arrayUnion,
   collection,
   deleteDoc,
   doc,
   getDocs,
-  onSnapshot,
   query,
-  setDoc,
   updateDoc,
   where,
 } from "firebase/firestore";
 import { db } from "../../firebase/firebase";
-import {
-  Button,
-  Card,
-  CardBody,
-  CardFooter,
-  CardHeader,
-} from "@material-tailwind/react";
+import { Button, Typography } from "@material-tailwind/react";
 import CommentSection from "../../components/Comments/CommentSection";
-import UserAvatar from "../../components/ProfileCard/UserAvatar";
-const PostDetails = ({
-  email,
-  id,
-  image,
-  logo,
-  name,
-  text,
-  timestamp,
-  uid,
-}) => {
+import LikeButton from "./LikeButton";
+const PostDetails = ({ id, image, logo, name, text, timestamp, uid }) => {
   const { user } = useContext(AuthContext);
-  const [state, dispatch] = useReducer(Reducer, postState);
-  const likesCollection = collection(db, "posts", id, "likes");
   const postDocument = doc(db, "posts", id);
-  const { ADD_LIKE, HANDLE_ERROR } = postActions;
   const [open, setOpen] = useState(false);
 
   const handleOpen = (e) => {
@@ -74,28 +49,6 @@ const PostDetails = ({
     }
   };
 
-  const handleLike = async (e) => {
-    e.preventDefault();
-    const likesQuery = query(likesCollection, where("id", "==", user?.uid));
-    const likesQuerySnapshot = await getDocs(likesQuery);
-    const likesDocId = await likesQuerySnapshot.docs[0]?.id;
-
-    try {
-      if (likesDocId !== undefined) {
-        const deleteLikeId = doc(db, "posts", id, "likes", likesDocId);
-        await deleteDoc(deleteLikeId);
-      } else {
-        await setDoc(doc(likesCollection, user?.uid), {
-          id: user?.uid,
-        });
-        console.log("Likes document not found");
-      }
-    } catch (err) {
-      alert(err.message);
-      console.log(err);
-    }
-  };
-
   const deletePost = async (e) => {
     e.preventDefault();
     try {
@@ -110,49 +63,30 @@ const PostDetails = ({
     }
   };
 
-  useEffect(() => {
-    const getLikes = async () => {
-      try {
-        const likesQuery = collection(db, "posts", id, "likes");
-        await onSnapshot(likesQuery, (doc) => {
-          dispatch({
-            type: ADD_LIKE,
-            likes: doc.docs.map((item) => item.data()),
-          });
-        });
-      } catch (err) {
-        dispatch({ type: HANDLE_ERROR });
-        alert(err.message);
-        console.log(err);
-      }
-    };
-
-    return () => getLikes();
-  }, [id, ADD_LIKE, HANDLE_ERROR]);
-
   return (
     <div>
-      <Card className="max-w-[24rem] overflow-hidden">
-        <CardHeader
-          floated={false}
-          shadow={false}
-          color="lightBlue"
-          className="m-0 rounded-none"
-        >
-          {image && <img className="h-[500px]" alt={text} src={image} />}
-          <UserAvatar src={logo} alt="avatar" size="sm" />
+      <div className="relative max-w-xs overflow-hidden rounded-2xl shadow-lg group">
+        <div className="m-0 rounded-none">
+          {image && (
+            <img
+              className="transition-transform group-hover:scale-110 duration-400"
+              alt={text}
+              src={image}
+            />
+          )}
+
           <h1>{name}</h1>
-        </CardHeader>
-        <CardBody>
-          <p>{text}</p>
-        </CardBody>
-        <CardFooter className="flex items-center justify-between">
-          <Button onClick={handleLike}>Like</Button>{" "}
-          {state.likes?.length > 0 && state?.likes?.length}
+        </div>
+        <div>
+          <Typography>{text}</Typography>
+          <Typography>Published: {timestamp}</Typography>
+        </div>
+        <div className="flex items-center justify-between">
+          <LikeButton id={id} />
           {user?.uid !== uid && <Button onClick={addUser}>Add</Button>}
           <Button onClick={deletePost}>Delete</Button>
-        </CardFooter>
-      </Card>
+        </div>
+      </div>
       <div
         className="flex items-center cursor-pointer rounded-lg p-2 hover:bg-gray-100"
         onClick={handleOpen}

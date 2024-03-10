@@ -253,7 +253,7 @@ const AddPost = () => {
                   image={post?.image}
                   text={post?.text}
                   timestamp={new Date(post?.timestamp?.toDate())?.toUTCString()}
-                ></PostDetails>
+                />
               );
             })}
           </div>

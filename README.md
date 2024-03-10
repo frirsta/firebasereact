@@ -48,4 +48,29 @@
   Photo by [Alexander Shatov](https://unsplash.com/@alexbemore?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash) on [Unsplash](https://unsplash.com/photos/blue-and-red-square-logo-71Qk8ODIBko?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash)
 
 - google
-<a href="https://www.freepik.com/icon/google_300221#fromView=search&page=1&position=0&uuid=1705c7a7-b991-417d-8a5a-37cc95f9572a">Icon by Freepik</a>
+  <a href="https://www.freepik.com/icon/google_300221#fromView=search&page=1&position=0&uuid=1705c7a7-b991-417d-8a5a-37cc95f9572a">Icon by Freepik</a>
+
+- instagram logo
+  <a href="https://www.freepik.com/icon/instagram_174855#fromView=search&page=1&position=5&uuid=88ef32af-655f-4a73-86e2-873fbce144f2">Icon by Freepik</a>
+
+- twitter icon
+  <a href="https://www.freepik.com/icon/twitter_733579#fromView=search&page=1&position=24&uuid=dcd77e16-6545-41ad-9d42-44dd00f32e4a">Icon by Pixel perfect</a>
+
+- facebook
+  <a href="https://www.freepik.com/icon/facebook_5968764#fromView=search&page=1&position=0&uuid=2ef33fdd-b9a0-46fb-88b2-b28c22a31838">Icon by Freepik</a>
+
+heart
+<a href="https://www.freepik.com/icon/heart_1077035#fromView=search&page=1&position=0&uuid=2fe4501a-393e-4bb9-a64c-2786ff5f2054">Icon by Freepik</a>
+
+https://www.freepik.com/icon/heart_1077086
+
+chat bubble
+<a href="https://www.freepik.com/icon/chat-balloon_447046#fromView=search&page=1&position=13&uuid=a4f52982-45e7-40a6-9a39-f2437f258016">Icon by Freepik</a>
+
+<a href="https://www.freepik.com/icon/chat-balloon_446090">Icon by Freepik</a>
+
+share
+<a href="https://www.freepik.com/icon/share_1358023#fromView=search&page=1&position=0&uuid=836d9f14-3e0e-4775-a84a-9f0c38e3e73c">Icon by Freepik</a>
+
+share
+<a href="https://www.freepik.com/icon/share_1358074">Icon by Freepik</a>
