@@ -11,7 +11,7 @@ import {
   ref,
   uploadBytesResumable,
 } from "firebase/storage";
-import { Button } from "@material-tailwind/react";
+import { Alert, Avatar, Button } from "@material-tailwind/react";
 import {
   Reducer,
   postActions,
@@ -26,29 +26,33 @@ import {
   query,
   orderBy,
   onSnapshot,
+  getDocs,
 } from "firebase/firestore";
 import { db } from "../../firebase/firebase";
-
+import avatar from "../../assets/images/avatar.jpg";
+import PostDetails from "./PostDetails";
 const AddPost = () => {
   const { user, userData } = useContext(AuthContext);
-  const caption = useRef("");
+  const text = useRef("");
   const scrollRef = useRef("");
   const [image, setImage] = useState(null);
   const [file, setFile] = useState(null);
   const collectionRef = collection(db, "posts");
   const postRef = doc(collection(db, "posts"));
+  const postsCollection = collection(db, "posts");
   const document = postRef.id;
   const [state, dispatch] = useReducer(Reducer, postState);
-  const { SUBMIT_POST, HANDLE_ERROR } = postActions;
+  const { ADD_POST, HANDLE_ERROR } = postActions;
   const [progressBar, setProgressBar] = useState(0);
+  const [posts, setPosts] = useState([]);
 
-  const handleUpload = (event) => {
-    setFile(event.target.files[0]);
+  const handleUpload = (e) => {
+    setFile(e.target.files[0]);
   };
 
-  const submitPost = async (event) => {
-    event.preventDefault();
-    if (caption.current.value !== "") {
+  const handleSubmitPost = async (e) => {
+    e.preventDefault();
+    if (text.current.value !== "") {
       try {
         await setDoc(postRef, {
           documentId: document,
@@ -56,11 +60,11 @@ const AddPost = () => {
           logo: user?.photoURL,
           name: user?.displayName || userData?.name,
           email: user?.email || userData?.email,
-          text: caption.current.value,
+          text: text.current.value,
           image: image,
           timestamp: serverTimestamp(),
         });
-        caption.current.value = "";
+        text.current.value = "";
       } catch (err) {
         dispatch({ type: HANDLE_ERROR });
         alert(err.message);
@@ -83,12 +87,12 @@ const AddPost = () => {
     ],
   };
 
-  const uploadImage = async () => {
+  const submitImage = async () => {
     const fileType = metadata.contentType.includes(file["type"]);
     if (!file) return;
     if (fileType) {
       try {
-        const storageRef = ref(storage, `posts/${file.name}`);
+        const storageRef = ref(storage, `images/${file.name}`);
         const uploadTask = uploadBytesResumable(
           storageRef,
           file,
@@ -121,12 +125,34 @@ const AddPost = () => {
     }
   };
 
+  const getPosts = async () => {
+    try {
+      const querySnapshot = await getDocs(postsCollection);
+      const postsData = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      return postsData;
+    } catch (error) {
+      console.error("Error fetching posts:", error.message);
+      throw error;
+    }
+  };
   useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const fetchedPosts = await getPosts();
+        setPosts(fetchedPosts);
+      } catch (error) {
+        console.error("Error fetching posts:", error.message);
+      }
+    };
+    fetchPosts();
     const postData = async () => {
-      const q = query(collectionRef, orderBy("timestamp", "asc"));
+      const q = query(collectionRef, orderBy("timestamp", "desc"));
       await onSnapshot(q, (doc) => {
         dispatch({
-          type: SUBMIT_POST,
+          type: ADD_POST,
           posts: doc?.docs?.map((item) => item?.data()),
         });
         scrollRef?.current?.scrollIntoView({ behavior: "smooth" });
@@ -136,13 +162,19 @@ const AddPost = () => {
       });
     };
     return () => postData();
-  }, [SUBMIT_POST]);
+  }, [ADD_POST]);
 
   return (
     <div className="flex flex-col items-center">
       <div className="flex flex-col py-4 w-full bg-white rounded-3xl shadow-lg">
         <div className="flex items-center border-b-2 border-gray-300 pb-4 pl-4 w-full">
-          <form className="w-full" onSubmit={submitPost}>
+          <Avatar
+            size="sm"
+            variant="circular"
+            src={user?.photoURL || avatar}
+            alt="avatar"
+          ></Avatar>
+          <form className="w-full" onSubmit={handleSubmitPost}>
             <div className="flex justify-between items-center">
               <div className="w-full ml-4">
                 <input
@@ -154,7 +186,7 @@ const AddPost = () => {
                       userData?.name?.slice(1)
                   }`}
                   className="outline-none w-full bg-white rounded-md"
-                  ref={caption}
+                  ref={text}
                 ></input>
               </div>
               <div className="mx-4">
@@ -193,15 +225,41 @@ const AddPost = () => {
               ></input>
             </label>
             {file && (
-              <Button variant="text" onClick={uploadImage}>
+              <Button variant="text" onClick={submitImage}>
                 Upload
               </Button>
             )}
           </div>
         </div>
       </div>
-
-      <div ref={scrollRef}></div>
+      <div className="flex flex-col py-4 w-full">
+        {state?.error ? (
+          <div className="flex justify-center items-center">
+            <Alert color="red">
+              Something went wrong refresh and try again...
+            </Alert>
+          </div>
+        ) : (
+          <div>
+            {posts?.map((post, index) => {
+              return (
+                <PostDetails
+                  key={index}
+                  logo={post?.logo}
+                  id={post?.documentId}
+                  uid={post?.uid}
+                  name={post?.name}
+                  email={post?.email}
+                  image={post?.image}
+                  text={post?.text}
+                  timestamp={new Date(post?.timestamp?.toDate())?.toUTCString()}
+                ></PostDetails>
+              );
+            })}
+          </div>
+        )}
+      </div>
+      <div ref={scrollRef}>{/* refference for later */}</div>
     </div>
   );
 };
