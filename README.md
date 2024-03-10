@@ -17,6 +17,9 @@
 
 - Font Awesome
 - https://heroicons.com/
+- freepik
+
+<a href="https://www.freepik.com/icon/circle-user_9821492#fromView=search&page=1&position=1&uuid=eac60fb6-63f4-4eda-9694-fe2412383f1a">Icon by UIcons</a>
 
 #### Images
 

@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect, useCallback } from "react";
+import React, { createContext, useState, useEffect } from "react";
 import {
   GoogleAuthProvider,
   signInWithPopup,
@@ -16,11 +16,12 @@ import {
   addDoc,
   onSnapshot,
 } from "firebase/firestore";
-import { redirect } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export const AuthContext = createContext();
 
 const Context = ({ children }) => {
+  const navigate = useNavigate();
   const collectionUserRef = collection(db, "users");
   const provider = new GoogleAuthProvider();
   const [user, setUser] = useState();
@@ -88,24 +89,32 @@ const Context = ({ children }) => {
     await signOut(auth);
   };
 
-  const userStateChange = useCallback(async () => {
+  const userStateChange = async () => {
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         const q = query(collectionUserRef, where("uid", "==", user?.uid));
-        onSnapshot(q, (doc) => {
+        await onSnapshot(q, (doc) => {
           setUserData(doc?.docs[0]?.data());
         });
         setUser(user);
       } else {
         setUser(null);
-        redirect("/signin");
+        navigate("/signin");
       }
     });
-  }, [collectionUserRef]);
+  };
 
   useEffect(() => {
     userStateChange();
-  }, [userStateChange]);
+    if (user || userData) {
+      navigate("/");
+    } else {
+      navigate("/signin");
+    }
+    return () => {
+      userStateChange();
+    };
+  }, []);
 
   const initialState = {
     signInWithGoogle: signInWithGoogle,
