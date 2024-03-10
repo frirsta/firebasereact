@@ -25,6 +25,7 @@ import {
   CardFooter,
   CardHeader,
 } from "@material-tailwind/react";
+import CommentSection from "../../components/Comments/CommentSection";
 
 const PostDetails = ({
   email,
@@ -146,6 +147,7 @@ const PostDetails = ({
           <Button onClick={deletePost}>Delete</Button>
         </CardFooter>
       </Card>
+      <CommentSection postId={id} />
     </div>
   );
 };
