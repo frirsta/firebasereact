@@ -93,15 +93,3 @@ smile icon
 <a href="https://www.freepik.com/icon/user-add_3917582">Icon by UIcons</a>
 
 <a href="https://www.freepik.com/icon/user-add_3917709">Icon by UIcons</a>
-
-
-
- "feat: Implement component updates and additions
-
-Updated PostModal component to include PostMenu and ShareButton components.
-Added ShareButton component with hover effect and tooltip for future functionality.
-Implemented PostMenu component with delete and edit options.
-Minor refinements to CommentSection component.
-Added CommentButton component for opening comment modal.
-Introduced DisplayUserImages component for displaying up to three user images.
-Updated and organized code across components.

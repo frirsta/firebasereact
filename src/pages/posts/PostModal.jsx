@@ -10,8 +10,8 @@ import {
 import UserAvatar from "../../components/ProfileCard/UserAvatar";
 import PostMenu from "../../components/PostMenu/PostMenu";
 const PostModal = ({
+  handler,
   isOpen,
-  onClose,
   id,
   image,
   logo,
@@ -21,7 +21,11 @@ const PostModal = ({
   uid,
 }) => {
   return (
-    <Dialog className="w-full max-w-[48rem] flex flex-row" open={isOpen}>
+    <Dialog
+      className="w-full max-w-[48rem] flex flex-row"
+      open={isOpen}
+      handler={handler}
+    >
       <DialogHeader className="m-0 w-2/5 shrink-0 rounded-r-none">
         <img src={image} alt={text} className="h-full w-full object-cover" />
       </DialogHeader>
@@ -38,7 +42,7 @@ const PostModal = ({
         <hr className="my-8 border-blue-gray-50 w-100" />
         <Typography className="text-gray-700">{text}</Typography>
 
-        <IconButton className="rounded-full" variant="text" onClick={onClose}>
+        <IconButton className="rounded-full" variant="text" onClick={handler}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"

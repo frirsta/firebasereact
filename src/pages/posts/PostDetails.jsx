@@ -51,15 +51,11 @@ const PostDetails = ({
   const [open, setOpen] = useState(false);
   const [state, dispatch] = useReducer(Reducer, postState);
   const { ADD_LIKE, HANDLE_ERROR } = postActions;
-  const [liked, setLiked] = useState(false);
   const friendList = userData?.friends;
   const openModal = () => {
-    setIsModalOpen(true);
+    setIsModalOpen((cur) => !cur);
   };
 
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
   const handleOpen = (e) => {
     e.preventDefault();
     setOpen(!open);
@@ -120,10 +116,6 @@ const PostDetails = ({
             type: ADD_LIKE,
             likes: doc.docs.map((item) => item.data()),
           });
-          const userLiked = doc.docs.some((item) => item.id === user?.uid);
-          setLiked(userLiked);
-
-          console.log(userLiked);
         });
       } catch (err) {
         dispatch({ type: HANDLE_ERROR });
@@ -132,7 +124,7 @@ const PostDetails = ({
     };
     return () => getLikes();
   }, [id, ADD_LIKE, HANDLE_ERROR, user?.uid]);
-  
+
   return (
     <div className="bg-gray-100 p-4">
       <Card className="bg-white border rounded-sm max-w-md">
@@ -198,8 +190,8 @@ const PostDetails = ({
       </Card>
 
       <PostModal
+        handler={openModal}
         isOpen={isModalOpen}
-        onClose={closeModal}
         id={postDocument.id}
         image={image}
         logo={logo}
