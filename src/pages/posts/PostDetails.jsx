@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useReducer, useState } from "react";
 import { AuthContext } from "../../components/Context/Context";
 import {
   arrayUnion,
@@ -9,16 +9,57 @@ import {
   query,
   updateDoc,
   where,
+  onSnapshot,
+  arrayRemove,
 } from "firebase/firestore";
 import { db } from "../../firebase/firebase";
-import { Button, Typography } from "@material-tailwind/react";
+import {
+  Button,
+  Card,
+  CardBody,
+  CardFooter,
+  CardHeader,
+  Typography,
+} from "@material-tailwind/react";
 import CommentSection from "../../components/Comments/CommentSection";
-import LikeButton from "./LikeButton";
-const PostDetails = ({ id, image, logo, name, text, timestamp, uid }) => {
-  const { user } = useContext(AuthContext);
+import BookmarkButton from "./BookmarkButton";
+import LikeButton from "./Likes/LikeButton";
+import ShareButton from "./ShareButton";
+import CommentButton from "../../components/Comments/CommentButton";
+import PostModal from "./PostModal";
+import UserAvatar from "../../components/ProfileCard/UserAvatar";
+import PostMenu from "../../components/PostMenu/PostMenu";
+import {
+  Reducer,
+  postActions,
+  postState,
+} from "../../components/Context/Reducer";
+import DisplayUserImages from "./Likes/DisplayUserImages";
+const PostDetails = ({
+  id,
+  image,
+  logo,
+  name,
+  text,
+  timestamp,
+  uid,
+  email,
+}) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { user, userData } = useContext(AuthContext);
   const postDocument = doc(db, "posts", id);
   const [open, setOpen] = useState(false);
+  const [state, dispatch] = useReducer(Reducer, postState);
+  const { ADD_LIKE, HANDLE_ERROR } = postActions;
+  const [liked, setLiked] = useState(false);
+  const friendList = userData?.friends;
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
 
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
   const handleOpen = (e) => {
     e.preventDefault();
     setOpen(!open);
@@ -48,7 +89,15 @@ const PostDetails = ({ id, image, logo, name, text, timestamp, uid }) => {
       console.error(err.message);
     }
   };
+  const removeFriend = async (id, name, image) => {
+    const q = query(collection(db, "users"), where("uid", "==", user?.uid));
+    const getDoc = await getDocs(q);
+    const userDocumentId = getDoc.docs[0].id;
 
+    await updateDoc(doc(db, "users", userDocumentId), {
+      friends: arrayRemove({ id: id, name: name, image: image }),
+    });
+  };
   const deletePost = async (e) => {
     e.preventDefault();
     try {
@@ -62,38 +111,103 @@ const PostDetails = ({ id, image, logo, name, text, timestamp, uid }) => {
       console.log(err);
     }
   };
+  useEffect(() => {
+    const getLikes = async () => {
+      try {
+        const likesQuery = collection(db, "posts", id, "likes");
+        await onSnapshot(likesQuery, (doc) => {
+          dispatch({
+            type: ADD_LIKE,
+            likes: doc.docs.map((item) => item.data()),
+          });
+          const userLiked = doc.docs.some((item) => item.id === user?.uid);
+          setLiked(userLiked);
 
+          console.log(userLiked);
+        });
+      } catch (err) {
+        dispatch({ type: HANDLE_ERROR });
+        alert(err.message);
+      }
+    };
+    return () => getLikes();
+  }, [id, ADD_LIKE, HANDLE_ERROR, user?.uid]);
+  
   return (
-    <div>
-      <div className="relative max-w-xs overflow-hidden rounded-2xl shadow-lg group">
-        <div className="m-0 rounded-none">
-          {image && (
-            <img
-              className="transition-transform group-hover:scale-110 duration-400"
-              alt={text}
-              src={image}
-            />
-          )}
+    <div className="bg-gray-100 p-4">
+      <Card className="bg-white border rounded-sm max-w-md">
+        <CardHeader
+          className="flex items-center justify-between"
+          shadow={false}
+          floated={false}
+        >
+          <div className="flex items-center mb-3">
+            <UserAvatar width={"30px"} image={logo} name={name} />
+            <Typography className="ml-3">{name}</Typography>
+          </div>
+          <div className="flex items-center mb-3">
+            {user?.email === email ? (
+              <PostMenu handledelete={deletePost} />
+            ) : friendList?.length > 0 ? (
+              friendList?.map(
+                (friend) =>
+                  friend.id === uid && (
+                    <Button
+                      onClick={() =>
+                        removeFriend(friend.id, friend.name, friend.image)
+                      }
+                    >
+                      Unfollow
+                    </Button>
+                  )
+              )
+            ) : (
+              <Button onClick={addUser}>Follow</Button>
+            )}
+          </div>
+        </CardHeader>
+        <img src={image} alt={text} className="h-full w-full object-cover" />
+        <CardBody className="w-100 p-3">
+          <div className="flex justify-between">
+            <div className="flex flex-row justify-start">
+              <LikeButton id={id} /> <CommentButton openModal={openModal} />
+              <ShareButton />
+            </div>
+            <div>
+              <BookmarkButton />
+            </div>
+          </div>
+          <div className="ml-3 flex justify-start items-baseline">
+            {state?.likes && (
+              <DisplayUserImages
+                users={state.likes}
+                open={open}
+                handleOpen={handleOpen}
+              />
+            )}
+            <Typography className="mt-3 ml-1">
+              {state?.likes.length > 0 && state?.likes.length}
+            </Typography>
+          </div>
+          <hr className="my-3 border-blue-gray-50 w-100" />
+        </CardBody>
 
-          <h1>{name}</h1>
-        </div>
-        <div>
-          <Typography>{text}</Typography>
-          <Typography>Published: {timestamp}</Typography>
-        </div>
-        <div className="flex items-center justify-between">
-          <LikeButton id={id} />
-          {user?.uid !== uid && <Button onClick={addUser}>Add</Button>}
-          <Button onClick={deletePost}>Delete</Button>
-        </div>
-      </div>
-      <div
-        className="flex items-center cursor-pointer rounded-lg p-2 hover:bg-gray-100"
-        onClick={handleOpen}
-      >
-        Comments
-      </div>
-      {open && <CommentSection postId={id} />}
+        <CardFooter className="flex flex-col justify-between">
+          <CommentSection postId={id} />
+        </CardFooter>
+      </Card>
+
+      <PostModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        id={postDocument.id}
+        image={image}
+        logo={logo}
+        name={name}
+        text={timestamp}
+        timestamp={timestamp}
+        uid={uid}
+      />
     </div>
   );
 };

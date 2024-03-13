@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useReducer, useState } from "react";
-import heart_outline from "../../assets/icons/heart_outline.png";
-import heart from "../../assets/icons/heart.png";
+import heart_outline from "../../../assets/icons/heart_outline.png";
+import heart from "../../../assets/icons/heart.png";
 import {
   collection,
   deleteDoc,
@@ -11,14 +11,14 @@ import {
   setDoc,
   where,
 } from "firebase/firestore";
-import { db } from "../../firebase/firebase";
+import { db } from "../../../firebase/firebase";
 import { IconButton } from "@material-tailwind/react";
-import { AuthContext } from "../../components/Context/Context";
+import { AuthContext } from "../../../components/Context/Context";
 import {
   Reducer,
   postActions,
   postState,
-} from "../../components/Context/Reducer";
+} from "../../../components/Context/Reducer";
 const LikeButton = ({ id }) => {
   const { user } = useContext(AuthContext);
   const [state, dispatch] = useReducer(Reducer, postState);
@@ -49,6 +49,8 @@ const LikeButton = ({ id }) => {
       } else {
         await setDoc(doc(likesCollection, user?.uid), {
           id: user?.uid,
+          name: user?.displayName,
+          photoURL: user?.photoURL,
         });
         console.log("Post liked");
         setLiked(true);
@@ -75,14 +77,15 @@ const LikeButton = ({ id }) => {
       } catch (err) {
         dispatch({ type: HANDLE_ERROR });
         alert(err.message);
-        console.log(err);
       }
     };
+
     return () => getLikes();
   }, [id, ADD_LIKE, HANDLE_ERROR, user?.uid]);
   return (
     <div>
       <IconButton
+        size="lg"
         variant="text"
         className="rounded-full"
         onClick={handleLike}
@@ -99,8 +102,6 @@ const LikeButton = ({ id }) => {
           </>
         )}
       </IconButton>
-
-      {state.likes?.length > 0 && state?.likes?.length}
     </div>
   );
 };

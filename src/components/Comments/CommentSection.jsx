@@ -9,12 +9,10 @@ import {
   serverTimestamp,
   setDoc,
 } from "firebase/firestore";
-import { Button } from "@material-tailwind/react";
-import Comment from "./Comment";
+import { Button, IconButton, Tooltip } from "@material-tailwind/react";
 import { db } from "../../firebase/firebase";
 import { postActions, Reducer, postState } from "../Context/Reducer";
-import UserAvatar from "../ProfileCard/UserAvatar";
-
+import smile_icon from "../../assets/icons/smile_icon.png";
 const CommentSection = ({ postId }) => {
   const comment = useRef("");
   const { user, userData } = useContext(AuthContext);
@@ -68,30 +66,40 @@ const CommentSection = ({ postId }) => {
   }, [ADD_COMMENT, postId, HANDLE_ERROR]);
   return (
     <div>
-      <div>
-        <div>
-          <UserAvatar image={user?.photoURL} name={user?.name}></UserAvatar>
+      <div className="flex justify-between items-center w-100">
+        <div className="mr-3">
+          <Tooltip
+            content="Coming Soon!"
+            animate={{
+              mount: { scale: 1, y: 0 },
+              unmount: { scale: 0, y: 25 },
+            }}
+          >
+            <IconButton variant="text">
+              <img src={smile_icon} alt="smile icon" />
+            </IconButton>
+          </Tooltip>
         </div>
-        <form onSubmit={addComment}>
+        <form
+          className="flex justify-between items-center w-100"
+          onSubmit={addComment}
+        >
           <input
+            className="text-sm h-10 w-full outline-none focus:outline-none"
+            placeholder="Add a comment"
             name="comment"
             type="text"
-            placeholder="Write a comment"
             ref={comment}
           />
-          <Button type="submit">Submit</Button>
+          <Button
+            variant="text"
+            type="submit"
+            className="text-blue-500 opacity-75 text-right font-bold"
+          >
+            Post
+          </Button>
         </form>
       </div>
-      {state?.comments?.map((item, index) => {
-        return (
-          <Comment
-            key={index}
-            image={item?.image}
-            comment={item?.comment}
-            name={item?.name}
-          ></Comment>
-        );
-      })}
     </div>
   );
 };

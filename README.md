@@ -74,3 +74,34 @@ share
 
 share
 <a href="https://www.freepik.com/icon/share_1358074">Icon by Freepik</a>
+
+bookmark
+<a href="https://www.freepik.com/icon/bookmark_552876#fromView=families&page=1&position=0&uuid=207e0ea6-cb5f-47e0-9015-3beb55cd74b4">Icon by Freepik</a>
+
+<a href="https://www.freepik.com/icon/bookmark_552749">Icon by Freepik</a>
+
+<a href="https://www.freepik.com/icon/ellipsis_1828805#fromView=search&page=1&position=78&uuid=7d75ee16-1452-40f5-a6be-613815e38083">Icon by Pixel perfect</a>
+
+<a href="https://www.freepik.com/icon/ellipsis_1828792">Icon by Pixel perfect</a>
+<a href="https://www.freepik.com/icon/ellipsis_1828792">Icon by Pixel perfect</a>
+
+smile icon
+<a href="https://www.freepik.com/icon/happy_158387#fromView=search&page=1&position=7&uuid=e95f382c-5006-40c6-b054-90c212584344">Icon by Freepik</a>
+<a href="https://www.freepik.com/icon/happy_158387#fromView=search&page=1&position=7&uuid=e95f382c-5006-40c6-b054-90c212584344">Icon by Freepik</a>
+
+
+<a href="https://www.freepik.com/icon/user-add_3917582">Icon by UIcons</a>
+
+<a href="https://www.freepik.com/icon/user-add_3917709">Icon by UIcons</a>
+
+
+
+ "feat: Implement component updates and additions
+
+Updated PostModal component to include PostMenu and ShareButton components.
+Added ShareButton component with hover effect and tooltip for future functionality.
+Implemented PostMenu component with delete and edit options.
+Minor refinements to CommentSection component.
+Added CommentButton component for opening comment modal.
+Introduced DisplayUserImages component for displaying up to three user images.
+Updated and organized code across components.
